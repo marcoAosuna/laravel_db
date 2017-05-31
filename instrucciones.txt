@@ -1,0 +1,78 @@
+La view que usaremos es ejem_dt_server
+0)Haces una base de datos y creas una tabla, en este caso la llamamos item.
+Cargas todos los enlaces links y scripts.
+
+1)El paquete trabaja sobre una <table>, usando una tabla de la base de datos.
+ 	<table id="tdatos" class="display" cellspacing="0" width="100%">
+           <thead>
+                    <tr>
+                    <th>id</th>
+                    <th>name</th>
+                    <th>posicion</th>
+                    <th>office</th>
+                    <th>age</th>
+                    <th>date</th>
+                    <th>salario</th>
+                    </tr>
+                    </thead>
+                    
+            <tbody>
+
+           </tbody>
+	</table>
+2)En https://datatables.net/    direccion de dataTable.js
+	click--> examples
+	abajo de menu examples; click-->Server-side
+	click-->Server-side processing //primera opcion
+	copias y pegas HTML en la view ejem_dt_server
+	copias y pegas el JS pero le añades las columnas que tiene tu tabla.
+		<script type="text/javascript">
+            $(document).ready( function () {
+            $('#tdatos').DataTable( {
+              "processing": true,
+              "serverSide": true,
+              "ajax": "prueba_db_server", 
+              "columns":[
+            {data:id},
+            {data:name},
+            {data:posicion},
+            {data:office},
+            {data:age},
+            {data:start_date},
+            {data:salario},
+            ]
+         } );//fin tdatos
+        } );//fin document
+     </script>
+//***NOTA, en la parte   "ajax": "prueba_db_server", //prueba_db_server es un route que
+//esta en web   Route::get('prueba_db_server','datosController@mostrar_datos_server');
+//que a su vez tiene el controladory la funcion "datosController@mostrar_datos_server "
+
+
+3) buscas en https://github.com/yajra/laravel-datatables
+bajas hasta encontrar;
+                Quick Installation
+//usando git instalas:
+      $ composer require yajra/laravel-datatables-oracle:^7.5
+//en tu proyecto buscas config/app y en la seccion:
+'providers' => [
+//colocas
+Yajra\Datatables\DatatablesServiceProvider::class
+//en la seccion 
+'aliases' => [
+//colocas
+ 'Datatables'=>Yajra\Datatables\Facades\Datatables::class,
+
+//vuelves a git y publicas;
+    $ php artisan vendor:publish --tag=datatables
+4)El controlador "datosController" //en cabecera usara:
+use Yajra\Datatables\Facades\Datatables;
+5)la funcion datosController@mostrar_datos_server " es asi:
+     public function mostrar_datos_server()
+{
+     $datos=item::all();
+	return view('ejem_dt',compact('datos'));
+}//fin function	
+
+
+
